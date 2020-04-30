@@ -1,6 +1,15 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
+const Feedback = ({handleGood, handleNeutral, handleBad}) => (
+  <>
+    <h1>Give Feedback</h1>
+    <Button text='good' handleClick={handleGood} />
+    <Button text='neutral' handleClick={handleNeutral} />
+    <Button text='bad' handleClick={handleBad} />
+  </>
+)
+
 const Button = ({text, handleClick}) => (
   <>
     <button onClick={handleClick}>
@@ -12,6 +21,17 @@ const Button = ({text, handleClick}) => (
 const Statistic = ({text, value}) => (
   <>
     <p>{text}: {value}</p>
+  </>
+)
+
+const Statistics = ({good, neutral, bad, total}) => (
+  <>
+    <h1>Statistics</h1>
+    <Statistic text='good' value={good} />
+    <Statistic text='neutral' value={neutral} />
+    <Statistic text='bad' value={bad} />
+    <Statistic text='total' value={total} />
+    <Statistic text='average' value={(total === 0) ? 0 : (good - bad) / total} />
   </>
 )
 
@@ -36,16 +56,8 @@ const App = () => {
 
   return (
     <>
-      <h1>Give Feedback</h1>
-      <Button text='good' handleClick={handleGood} />
-      <Button text='neutral' handleClick={handleNeutral} />
-      <Button text='bad' handleClick={handleBad} />
-      <h2>Statistics</h2>
-      <Statistic text='good' value={good} />
-      <Statistic text='neutral' value={neutral} />
-      <Statistic text='bad' value={bad} />
-      <Statistic text='total' value={total} />
-      <Statistic text='average' value={(total === 0) ? 0 : (good - bad) / total} />
+      <Feedback handleGood={handleGood} handleNeutral={handleNeutral} handleBad={handleBad} />
+      <Statistics good={good} neutral={neutral} bad={bad} total={total} />
     </>
   )
 }
