@@ -1,25 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 
-const Hello = (props) => {
-  return (
-    <>
-      <p>
-        Hello {props.name}, you are {props.age} years old
-      </p>
-    </>
-  );
-}
-
 const App = () => {
-  const name = 'Jack';
-  const age = 19;
+  const [count, setCount] = useState(0);
+
+  const increase = () => setCount(count + 1);
+  const decrease = () => setCount(count - 1);
+  const zero = () => setCount(0);
 
   return (
     <>
-      <h1>Greetings</h1>
-      <Hello name='Will' age={17} />
-      <Hello name={name} age={age} />
+      <Display count={count} />
+      <Button text='plus' handleClick={increase} />
+      <Button text='minus' handleClick={decrease} />
+      <Button text='zero' handleClick={zero} />
     </>
   );
-}
+};
+
+const Display = ({count}) => <>{count}</>;
+const Button = ({text, handleClick}) => (
+  <button onClick={handleClick}>
+    {text}
+  </button>
+)
+
+ReactDOM.render(
+  <App />,
+  document.getElementById('root')
+)
