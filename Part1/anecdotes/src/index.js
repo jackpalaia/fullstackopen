@@ -14,10 +14,14 @@ const App = ({anecdotes}) => {
 
   return (
     <>
+      <h1>Anecdote of the day</h1>
       <div>{anecdotes[selected]}</div>
       <p>has {votes[selected]} votes</p>
       <button onClick={vote}>vote</button>
       <button onClick={next}>next anecdote</button>
+      <h2>Anecdote with most votes</h2>
+      <div>{anecdotes[votes.indexOf(Math.max(...votes))]}</div>
+      <p>has {votes[votes.indexOf(Math.max(...votes))]} votes</p>
     </>
   )
 }
