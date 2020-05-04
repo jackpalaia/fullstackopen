@@ -18,7 +18,7 @@ const Header = ({ course }) => {
 const Total = ({ course }) => {
   const sum = course.parts.reduce((result, x) => result + x.exercises, 0);
   return(
-    <p>Number of exercises {sum}</p>
+    <p>Total of {sum} exercises</p>
   ) 
 }
 
@@ -53,6 +53,10 @@ const App = () => {
       {
         name: 'State of a component',
         exercises: 14
+      },
+      {
+        name: 'redux',
+        exercises: 11
       }
     ]
   }
