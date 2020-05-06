@@ -1,8 +1,9 @@
 import React from 'react'
 
-const Form = ({onSubmit, nameValue, nameChange, numberValue, numberChange}) => {
+const AddNew = ({onSubmit, nameValue, nameChange, numberValue, numberChange}) => {
   return (
     <div>
+      <h2>Add New Entry</h2>
       <form onSubmit={onSubmit}>
         <div>
           name: <input value={nameValue} onChange={nameChange} />
@@ -18,4 +19,4 @@ const Form = ({onSubmit, nameValue, nameChange, numberValue, numberChange}) => {
   )
 }
 
-export default Form
+export default AddNew
