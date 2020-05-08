@@ -1,13 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import AddNew from './components/AddNew'
 import Entries from './components/Entries'
 import Search from './components/Search'
+import axios from 'axios'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
+
+  const hook = () => {
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        setPersons(response.data)
+      })
+  }
+
+  useEffect(hook, [])
 
   const handleFormSubmit = e => {
     e.preventDefault();
@@ -42,7 +53,7 @@ const App = () => {
     }
     return [...persons].filter(person => person.name.toLowerCase().includes(search));
   }
-//
+  
   return (
     <div>
       <h1>Phonebook</h1>
