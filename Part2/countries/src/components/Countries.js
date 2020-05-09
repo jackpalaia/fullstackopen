@@ -1,7 +1,7 @@
 import React from 'react'
 import Country from './Country'
 
-const Countries = ({countryList, onClick}) => {
+const Countries = ({countryList}) => {
   const length = countryList.length;
   if (length > 10) {
     return ( <p>Too many matches, specificy another filter</p> )

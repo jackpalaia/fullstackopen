@@ -15,8 +15,6 @@ const App = () => {
       })
   }, [])
 
-  console.log(countryList)
-
   const handleSearchChange = (e) => {
     setSearch(e.target.value)
   }
