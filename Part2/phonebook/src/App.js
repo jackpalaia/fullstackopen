@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import AddNew from './components/AddNew'
 import Entries from './components/Entries'
 import Search from './components/Search'
-import axios from 'axios'
+import phonebookService from './services/services'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
@@ -10,15 +10,13 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+  useEffect(() => {
+    phonebookService
+      .getAll()
+      .then(persons => {
+        setPersons(persons)
       })
-  }
-
-  useEffect(hook, [])
+  }, [])
 
   const handleFormSubmit = e => {
     e.preventDefault();
@@ -30,9 +28,11 @@ const App = () => {
       alert(`${newName} is already added to the phonebook`);
       return;
     }
-    setPersons(persons.concat(newPerson));
-    setNewName('');
-    setNewNumber('');
+    phonebookService
+      .create(newPerson)
+      .then(person => setPersons(persons.concat(person)))
+    setNewName('')
+    setNewNumber('')
   }
 
   const handleNameChange = e => {

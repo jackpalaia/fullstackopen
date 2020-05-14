@@ -1,7 +1,7 @@
 import React from 'react'
 import Country from './Country'
 
-const Countries = ({countryList}) => {
+const Countries = ({ countryList, weatherData }) => {
   const length = countryList.length;
   if (length > 10) {
     return ( <p>Too many matches, specificy another filter</p> )
@@ -22,7 +22,7 @@ const Countries = ({countryList}) => {
   const country = countryList[0]
   return (
     <>
-      <Country country={country} />
+      <Country country={country} weatherData={weatherData} />
     </>
   )
 
