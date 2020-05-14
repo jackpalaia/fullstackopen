@@ -1,7 +1,7 @@
 import React from 'react'
 import Entry from './Entry'
 
-const Entries = ({persons}) => {
+const Entries = ({persons, deleteEntry }) => {
   return (
     <div>
       <h2>Numbers</h2>
@@ -10,7 +10,7 @@ const Entries = ({persons}) => {
         margin: 0,
         padding: 0
       }}>
-        {persons.map(person => <Entry key={person.name} person={person}/>)}
+        {persons.map(person => <Entry key={person.name} person={person} deleteEntry={deleteEntry} />)}
       </ul>
     </div>
   )

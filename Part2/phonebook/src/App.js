@@ -47,6 +47,12 @@ const App = () => {
     setSearch(e.target.value);
   }
 
+  const handleDelete = id => {
+    phonebookService
+      .deleteEntry(id)
+      .then(entry => setPersons(persons.filter(person => person.id !== id)))
+  }
+
   const searchPersons = () => {
     if (search === '') {
       return persons;
@@ -59,7 +65,7 @@ const App = () => {
       <h1>Phonebook</h1>
       <Search value={search} onChange={handleSearchChange} />
       <AddNew onSubmit={handleFormSubmit} nameValue={newName} nameChange={handleNameChange} numberValue={newNumber} numberChange={handleNumberChange}/>
-      <Entries persons={searchPersons()} />
+      <Entries persons={searchPersons()} deleteEntry={handleDelete} />
     </div>
   )
 }
