@@ -13,9 +13,7 @@ const App = () => {
   useEffect(() => {
     phonebookService
       .getAll()
-      .then(persons => {
-        setPersons(persons)
-      })
+      .then(persons => setPersons(persons))
   }, [])
 
   const handleFormSubmit = e => {
@@ -25,7 +23,13 @@ const App = () => {
       number: newNumber
     };
     if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to the phonebook`);
+      if (window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)) {
+        const id = persons.find(p => p.name === newName).id
+        phonebookService
+          .update(id, newPerson)
+          .then(() => phonebookService.getAll())
+          .then(people => setPersons(people))
+      }
       return;
     }
     phonebookService
@@ -48,9 +52,12 @@ const App = () => {
   }
 
   const handleDelete = id => {
-    phonebookService
+    const person = persons.find(p => p.id === id)
+    if (window.confirm(`Delete ${person.name}?`)) {
+      phonebookService
       .deleteEntry(id)
-      .then(entry => setPersons(persons.filter(person => person.id !== id)))
+      .then(() => setPersons(persons.filter(p => p !== person)))
+    }
   }
 
   const searchPersons = () => {
