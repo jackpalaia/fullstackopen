@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react'
 import AddNew from './components/AddNew'
 import Entries from './components/Entries'
 import Search from './components/Search'
+import Notification from './components/Notification'
 import phonebookService from './services/services'
+import './index.css'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]);
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
+  const [ notifMsg, setNotifMsg ] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -29,6 +32,8 @@ const App = () => {
           .update(id, newPerson)
           .then(() => phonebookService.getAll())
           .then(people => setPersons(people))
+        setNotifMsg(`updated ${newName}'s number to ${newNumber}`)
+        setTimeout(() => setNotifMsg(null), 3000)
       }
       return;
     }
@@ -37,6 +42,8 @@ const App = () => {
       .then(person => setPersons(persons.concat(person)))
     setNewName('')
     setNewNumber('')
+    setNotifMsg(`${newName} added to phonebook`)
+    setTimeout(() => setNotifMsg(null), 3000)
   }
 
   const handleNameChange = e => {
@@ -57,6 +64,8 @@ const App = () => {
       phonebookService
       .deleteEntry(id)
       .then(() => setPersons(persons.filter(p => p !== person)))
+      setNotifMsg(`${person.name} deleted from phonebook`)
+      setTimeout(() => setNotifMsg(null), 3000)
     }
   }
 
@@ -70,6 +79,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notifMsg} />
       <Search value={search} onChange={handleSearchChange} />
       <AddNew onSubmit={handleFormSubmit} nameValue={newName} nameChange={handleNameChange} numberValue={newNumber} numberChange={handleNumberChange}/>
       <Entries persons={searchPersons()} deleteEntry={handleDelete} />
