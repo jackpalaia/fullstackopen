@@ -12,6 +12,7 @@ const App = () => {
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setSearch ] = useState('')
   const [ notifMsg, setNotifMsg ] = useState(null)
+  const [ notifType, setNotifType ] = useState('')
 
   useEffect(() => {
     phonebookService
@@ -30,9 +31,14 @@ const App = () => {
         const id = persons.find(p => p.name === newName).id
         phonebookService
           .update(id, newPerson)
+          .catch(() => {
+            setNotifMsg(`${newName} has already been removed from server`)
+            setNotifType('error')
+          })
           .then(() => phonebookService.getAll())
           .then(people => setPersons(people))
         setNotifMsg(`updated ${newName}'s number to ${newNumber}`)
+        setNotifType('success')
         setTimeout(() => setNotifMsg(null), 3000)
       }
       return;
@@ -43,6 +49,7 @@ const App = () => {
     setNewName('')
     setNewNumber('')
     setNotifMsg(`${newName} added to phonebook`)
+    setNotifType('success')
     setTimeout(() => setNotifMsg(null), 3000)
   }
 
@@ -65,6 +72,7 @@ const App = () => {
       .deleteEntry(id)
       .then(() => setPersons(persons.filter(p => p !== person)))
       setNotifMsg(`${person.name} deleted from phonebook`)
+      setNotifType('success')
       setTimeout(() => setNotifMsg(null), 3000)
     }
   }
@@ -79,7 +87,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={notifMsg} />
+      <Notification message={notifMsg} type={notifType} />
       <Search value={search} onChange={handleSearchChange} />
       <AddNew onSubmit={handleFormSubmit} nameValue={newName} nameChange={handleNameChange} numberValue={newNumber} numberChange={handleNumberChange}/>
       <Entries persons={searchPersons()} deleteEntry={handleDelete} />
