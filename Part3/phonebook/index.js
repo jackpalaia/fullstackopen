@@ -22,8 +22,14 @@ const entries = [
 ]
 
 app.get('/api/persons', (request, response) => {
-  console.log(response)
   response.json(entries)
+})
+
+app.get('/info', (request, response) => {
+  response.send(`
+    <p>Phonebook has info for ${entries.length} people</p>
+    ${new Date()}
+  `)
 })
 
 const port = 3001
