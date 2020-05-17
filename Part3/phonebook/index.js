@@ -3,7 +3,7 @@ import express from 'express'
 const app = express()
 app.use(express.json())
 
-const entries = [
+let entries = [
   {
     "name": "jack palaia",
     "number": 1111111,
@@ -36,6 +36,13 @@ app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
   const person = entries.find(entry => entry.id === id)
   response.json(person)
+})
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  entries = entries.filter(entry => entry.id !== id)
+
+  response.status(204).end()
 })
 
 const port = 3001
