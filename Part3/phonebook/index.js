@@ -50,9 +50,18 @@ const generateId = () => Math.max(...entries.map(entry => entry.id)) + 1
 app.post('/api/persons', (request, response) => {
   const body = request.body
   
-  if (!body) {
+  // error handling
+  if (!body.name) {
     return response.status(400).json({
-      error: 'content missing'
+      error: 'name missing'
+    })
+  } else if (!body.number) {
+    return response.status(400).json({
+      error: 'number missing'
+    })
+  } else if (entries.some(entry => entry.name === body.name)) {
+    return response.status(400).json({
+      error: 'name already in phonebook'
     })
   }
   
