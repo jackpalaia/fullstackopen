@@ -45,6 +45,28 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+const generateId = () => Math.max(...entries.map(entry => entry.id)) + 1 
+
+app.post('/api/persons', (request, response) => {
+  const body = request.body
+  
+  if (!body) {
+    return response.status(400).json({
+      error: 'content missing'
+    })
+  }
+  
+  const entry = {
+    name: body.name,
+    number: body.number,
+    id: generateId()
+  }
+
+  entries = entries.concat(entry)
+
+  response.json(entry)
+})
+
 const port = 3001
 app.listen(port, () => {
   console.log(`server running on port ${port}`)
