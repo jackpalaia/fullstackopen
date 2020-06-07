@@ -16,6 +16,8 @@ const Blog = mongoose.model('Blog', blogSchema)
 
 const mongoUrl = process.env.MONGODB_URI
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to mongoDB'))
+  .catch(error => console.log(`error connecting to mongoDB: ${error.message}`))
 
 app.use(cors())
 app.use(express.json())
@@ -38,7 +40,7 @@ app.post('/api/blogs', (request, response) => {
     })
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
