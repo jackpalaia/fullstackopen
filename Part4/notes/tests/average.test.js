@@ -1,0 +1,1 @@
+const average = require()
