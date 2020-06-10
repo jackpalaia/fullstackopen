@@ -22,7 +22,13 @@ const favoriteBlog = blogs => {
 }
 
 const mostBlogs = blogs => {
-  
+  if (blogs.length === 0) {
+    return null
+  }
+  let authors = []
+  blogs.forEach(blog => {
+    if (authors.some(author => ))
+  })
 }
 
 module.exports = {
