@@ -14,7 +14,10 @@ beforeEach(async () => {
 })
 
 test('get all blogs', async () => {
-  const blogs = await api.get('/api/blogs')
+  const blogs = await api
+    .get('/api/blogs')
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
   const blogsInDB = await helper.blogsInDB()
   expect(blogs.body.length).toEqual(blogsInDB.length)
 })
