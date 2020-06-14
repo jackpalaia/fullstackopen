@@ -22,6 +22,15 @@ test('get all blogs', async () => {
   expect(blogs.body.length).toEqual(blogsInDB.length)
 })
 
+test('verify id', async () => {
+  const blogs = await api
+    .get('/api/blogs')
+  blogs.body.forEach(b => {
+    expect(b.id).toBeDefined()
+    expect(b._id).not.toBeDefined()
+  })
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
