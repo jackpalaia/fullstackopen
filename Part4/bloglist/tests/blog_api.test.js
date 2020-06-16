@@ -52,6 +52,19 @@ test('new blog post', async () => {
   expect(content).toContain(newBlog.content)
 })
 
+test('likes missing from request', async () => {
+  const newBlog = {
+    content: 'test blog',
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+  
+  const blogsAtEnd = await Blog.find({})
+  expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toBe(0)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
