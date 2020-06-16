@@ -31,6 +31,27 @@ test('verify id', async () => {
   })
 })
 
+test('new blog post', async () => {
+  const newBlog = {
+    title: 'blog4',
+    author: 'dddddddd',
+    url: 'twitter.com',
+    likes: 4
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDB()
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1)
+
+  const content = blogsAtEnd.map(b => b.content)
+  expect(content).toContain(newBlog.content)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
