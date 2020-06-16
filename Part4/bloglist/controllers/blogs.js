@@ -10,8 +10,8 @@ blogsRouter.post('/', (request, response) => {
   const body = request.body
   const blog = new Blog({
     content: body.content,
-    author: body.author || 'no author specified',
-    url: body.url || 'no url specified',
+    author: body.author,
+    url: body.url,
     likes: body.likes || 0
   })
   blog

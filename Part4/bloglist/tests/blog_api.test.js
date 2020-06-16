@@ -65,6 +65,19 @@ test('likes missing from request', async () => {
   expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toBe(0)
 })
 
+
+test('title and url missing, 400 bad request', async () => {
+  const newBlog = {
+    content: 'test blog'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+
+  
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
