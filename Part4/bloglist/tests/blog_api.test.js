@@ -3,7 +3,6 @@ const supertest = require('supertest')
 const api = supertest(app)
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
-const logger = require('../utils/logger')
 const Blog = require('../models/blog')
 
 beforeEach(async () => {
@@ -42,7 +41,7 @@ test('new blog post', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .expect(201)
+    .expect(200)
     .expect('Content-Type', /application\/json/)
 
   const blogsAtEnd = await helper.blogsInDB()
@@ -55,6 +54,7 @@ test('new blog post', async () => {
 test('likes missing from request', async () => {
   const newBlog = {
     title: 'test blog',
+    author: 'test author'
   }
 
   await api
@@ -65,7 +65,6 @@ test('likes missing from request', async () => {
   expect(blogsAtEnd[blogsAtEnd.length - 1].likes).toBe(0)
 })
 
-
 test('title and url missing, 400 bad request', async () => {
   const newBlog = {
     likes: 4
@@ -75,6 +74,18 @@ test('title and url missing, 400 bad request', async () => {
     .post('/api/blogs')
     .send(newBlog)
     .expect(400)
+})
+
+test('delete blog', async () => {
+  const blogsAtStart = await helper.blogsInDB()
+  const blogToDelete = blogsAtStart[2]
+
+  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+  const blogsAtEnd = await helper.blogsInDB()
+  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1)
+
+  expect(blogsAtEnd).not.toContain(blogToDelete)
 })
 
 afterAll(() => {
