@@ -54,7 +54,7 @@ test('new blog post', async () => {
 
 test('likes missing from request', async () => {
   const newBlog = {
-    content: 'test blog',
+    title: 'test blog',
   }
 
   await api
@@ -68,14 +68,13 @@ test('likes missing from request', async () => {
 
 test('title and url missing, 400 bad request', async () => {
   const newBlog = {
-    content: 'test blog'
+    likes: 4
   }
 
   await api
     .post('/api/blogs')
     .send(newBlog)
-
-  
+    .expect(400)
 })
 
 afterAll(() => {
