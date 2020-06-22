@@ -5,17 +5,9 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.send(blogs.map(b => b.toJSON()))
 })
-
-/*const getTokenFrom = request => {
-  const auth = request.get('authorization')
-  if (auth && auth.toLowerCase().startsWith('bearer ')) {
-    return auth.substring(7)
-  }
-  return null
-}*/
 
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
@@ -46,10 +38,16 @@ blogsRouter.delete('/:id', async (req, res) => {
   if (!token || !decodedToken.id) {
     return res.status(401).json({ error: 'token missing or invalid' })
   }
-  const blog = await Blog.findById()
   const user = await User.findById(decodedToken.id)
-  await Blog.findByIdAndDelete()
-  res.sendStatus(204).end()
+  const blog = await Blog.findById(req.params.id)
+  if (blog.user.toString() !== user.id.toString()) {
+    return res.status(401).json({ error: 'only the creator can delete blogs' })
+  }
+
+  await blog.remove()
+  user.blogs = user.blogs.filter(b => b.id.toString() !== req.params.id.toString())
+  await user.save()
+  res.status(204).end()
 })
 
 blogsRouter.put('/:id', async (req, res) => {
