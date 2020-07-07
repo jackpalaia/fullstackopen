@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Login from './components/Login'
 import CreateBlog from './components/CreateBlog'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,11 +14,12 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [nMessage, setNMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -36,22 +38,29 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
+      setNMessage(`${user.name} logged in`)
+      setTimeout(() => { setNMessage('') }, 3000)
       setUsername('')
       setPassword('')
     } catch (e) {
-      console.log('wrong credentials')
+      setNMessage(`wrong credentials`)
+      setTimeout(() => { setNMessage('') }, 3000)
     }
   }
 
   const handleLogout = async event => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')
+    setNMessage(`successfully logged out`)
+    setTimeout(() => { setNMessage('') }, 3000)
     setUser(null)
   }
 
   const handleCreateBlog = async event => {
     event.preventDefault()
     const newBlog = await blogService.create({ title, author, url })
+    setNMessage(`${newBlog.title} added`)
+    setTimeout(() => { setNMessage('') }, 3000)
     setBlogs(blogs.concat(newBlog))
     setTitle('')
     setAuthor('')
@@ -60,7 +69,7 @@ const App = () => {
 
   return (
     <div>
-      
+      <Notification message={nMessage} />
       {user === null
         ? <Login 
           submit={handleLogin}
