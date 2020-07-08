@@ -38,8 +38,6 @@ const App = () => {
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setNMessage(`${user.name} logged in`)
-      setTimeout(() => { setNMessage('') }, 3000)
       setUsername('')
       setPassword('')
     } catch (e) {
@@ -69,6 +67,12 @@ const App = () => {
 
   return (
     <div>
+      { user !== null
+        ? <div>
+            {user.name} logged in <button onClick={handleLogout}>log out</button>
+          </div>
+        : null
+      }
       <Notification message={nMessage} />
       {user === null
         ? <Login 
@@ -85,7 +89,6 @@ const App = () => {
               authorChange={({target}) => setAuthor(target.value)}
               urlChange={({target}) => setUrl(target.value)}
             />
-            {user.name} logged in <button onClick={handleLogout}>log out</button>
             <h2>blogs</h2>
             {blogs.map(blog =>
               <Blog key={blog.id} blog={blog} />

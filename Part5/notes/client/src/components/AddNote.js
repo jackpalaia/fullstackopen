@@ -1,10 +1,27 @@
-import React from 'react'
+import React, { useState, createContext } from 'react'
 
-const AddNote = ({ submitHandler, text, textChange }) => (
-  <form onSubmit={submitHandler}>
-    <input value={text} onChange={textChange} />
-    <button type='submit'>save</button>
-  </form>
-)
+const AddNote = ({ createNote }) => {
+  const [newNote, setNewNote] = useState('')
+
+  const addNote = event => {
+    event.preventDefault()
+    createNote({
+      content: newNote,
+      important: Math.random() > .5
+    })
+    setNewNote('')
+  }
+
+  return (
+    <div>
+      <h2>add new note</h2>
+
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={({target}) => setNewNote(target.value)} />
+        <button type='submit'>add</button>
+      </form>
+    </div>
+  )
+}
 
 export default AddNote

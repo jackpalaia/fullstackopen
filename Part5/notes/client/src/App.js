@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Note from './components/Note'
 import noteService from './services/notes'
 import Notification from './components/Notification'
 import loginService from './services/login'
 import Login from './components/Login'
 import AddNote from './components/AddNote'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true);
   const [nMessage, setNMessage] = useState(null)
   const [nType, setNType] = useState(null)
@@ -26,25 +26,19 @@ const App = () => {
 
   useEffect(() => {
     const loggedUser = window.localStorage.getItem('loggedUser')
-    if (loggedUser) {
+    if (loggedUser !== null) {
       const user = JSON.parse(loggedUser)
       setUser(user)
       noteService.setToken(user.token)
     }
   }, [])
 
-  const addNote = (event) => {
-    event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      date: new Date().toISOString(),
-      important: Math.random() < .5,
-    }
+  const addNote = note => {
+    noteFormRef.current.toggleVisibility()
     noteService
-      .create(noteObject)
+      .create(note)
       .then(response => {
         setNotes(notes.concat(response))
-        setNewNote('')
         setNType('good')
         setNMessage(`note '${response.content}' added`)
         setTimeout(() => {
@@ -101,16 +95,36 @@ const App = () => {
     }
   }
   
+  const loginForm = () => (
+    <Togglable buttonLabel='login'>
+      <Login
+        username={username}
+        password={password}
+        usernameChange={({ target }) => setUsername(target.value)}
+        passwordChange={({ target }) => setPassword(target.value)}
+        submitHandler={handleLogin}
+      />
+    </Togglable>
+  )
+
+  const noteFormRef = useRef()
+  
+  const noteForm = () => (
+    <Togglable buttonLabel="new note" ref={noteFormRef}>
+      <AddNote createNote={addNote} />
+    </Togglable>
+  )
+
   return (
     <div>
       <h1>Notes</h1>
       <Notification message={nMessage} type={nType} />
-
+      
       {user === null
-        ? <Login submitHandler={handleLogin} username={username} password={password} usernameChange={({target}) => setUsername(target.value)} passwordChange={({target}) => setPassword(target.value)}/>
+        ? loginForm()
         : <div>
             <p>{user.name} logged in</p>
-            <AddNote submitHandler={addNote} text={newNote} textChange={({target}) => setNewNote(target.value)} />  
+            {noteForm()}  
           </div>
       }
       
