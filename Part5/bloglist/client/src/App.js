@@ -67,6 +67,11 @@ const App = () => {
     await blogService.update(id, updatedBlog)
   }
 
+  const handleDelete = async blog => {
+    setBlogs(blogs.filter(curr => curr !== blog))
+    await blogService.remove(blog.id)
+  }
+
   const loginForm = () => (
     <Login 
       submit={handleLogin}
@@ -102,7 +107,7 @@ const App = () => {
             <h2>blogs</h2>
 
             {(blogs.sort((a, b) => b.likes - a.likes)).map(blog =>
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} />
+              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete}/>
             )}
           </div>
       }
