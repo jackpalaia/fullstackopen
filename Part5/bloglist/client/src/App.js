@@ -63,8 +63,8 @@ const App = () => {
   const handleLike = async id => {
     const blog = blogs.find(curr => curr.id === id)
     const updatedBlog = { ...blog, likes: blog.likes + 1 }
-    const res = await blogService.update(id, updatedBlog)
-    setBlogs(blogs.map(blog => blog.id === id ? res : blog))
+    setBlogs(blogs.map(blog => blog.id === id ? updatedBlog : blog))
+    await blogService.update(id, updatedBlog)
   }
 
   const loginForm = () => (
@@ -100,7 +100,8 @@ const App = () => {
         : <div>
             {blogForm()}
             <h2>blogs</h2>
-            {blogs.map(blog =>
+
+            {(blogs.sort((a, b) => b.likes - a.likes)).map(blog =>
               <Blog key={blog.id} blog={blog} handleLike={handleLike} />
             )}
           </div>
