@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -12,9 +12,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [nMessage, setNMessage] = useState('')
 
   useEffect(() => {
@@ -55,15 +52,12 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateBlog = async event => {
-    event.preventDefault()
-    const newBlog = await blogService.create({ title, author, url })
+  const handleCreateBlog = async blog => {
+    blogFormRef.current.toggleVisibility()
+    const newBlog = await blogService.create(blog)
     setNMessage(`${newBlog.title} added`)
     setTimeout(() => { setNMessage('') }, 3000)
     setBlogs(blogs.concat(newBlog))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
   }
 
   const loginForm = () => (
@@ -75,15 +69,10 @@ const App = () => {
     />
   )
 
+  const blogFormRef = useRef()
   const blogForm = () => (
-    <Toggle label='create blog'>
-      <CreateBlog
-        submit={handleCreateBlog}
-        title={title} author={author} url={url}
-        titleChange={({target}) => setTitle(target.value)}
-        authorChange={({target}) => setAuthor(target.value)}
-        urlChange={({target}) => setUrl(target.value)}
-      />
+    <Toggle label='create blog' ref={blogFormRef}>
+      <CreateBlog submit={handleCreateBlog} />
     </Toggle>
   )
 
