@@ -5,6 +5,7 @@ import loginService from './services/login'
 import Login from './components/Login'
 import CreateBlog from './components/CreateBlog'
 import Notification from './components/Notification'
+import Toggle from './components/Toggle'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -65,30 +66,43 @@ const App = () => {
     setUrl('')
   }
 
+  const loginForm = () => (
+    <Login 
+      submit={handleLogin}
+      username={username} pass={password}
+      usernameChange={({target}) => setUsername(target.value)}
+      passChange={({target}) => setPassword(target.value)}
+    />
+  )
+
+  const blogForm = () => (
+    <Toggle label='create blog'>
+      <CreateBlog
+        submit={handleCreateBlog}
+        title={title} author={author} url={url}
+        titleChange={({target}) => setTitle(target.value)}
+        authorChange={({target}) => setAuthor(target.value)}
+        urlChange={({target}) => setUrl(target.value)}
+      />
+    </Toggle>
+  )
+
   return (
     <div>
-      { user !== null
+
+      {user !== null
         ? <div>
             {user.name} logged in <button onClick={handleLogout}>log out</button>
           </div>
         : null
       }
+
       <Notification message={nMessage} />
+
       {user === null
-        ? <Login 
-          submit={handleLogin}
-          username={username} pass={password}
-          usernameChange={({target}) => setUsername(target.value)}
-          passChange={({target}) => setPassword(target.value)}
-        />
+        ? loginForm()
         : <div>
-            <CreateBlog
-              submit={handleCreateBlog}
-              title={title} author={author} url={url}
-              titleChange={({target}) => setTitle(target.value)}
-              authorChange={({target}) => setAuthor(target.value)}
-              urlChange={({target}) => setUrl(target.value)}
-            />
+            {blogForm()}
             <h2>blogs</h2>
             {blogs.map(blog =>
               <Blog key={blog.id} blog={blog} />
