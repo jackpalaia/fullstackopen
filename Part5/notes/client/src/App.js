@@ -9,7 +9,7 @@ import Togglable from './components/Togglable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(true)
   const [nMessage, setNMessage] = useState(null)
   const [nType, setNType] = useState(null)
   const [username, setUsername] = useState('')
@@ -61,7 +61,7 @@ const App = () => {
           setNMessage(null)
         }, 3000)
       })
-      .catch(error => {
+      .catch(() => {
         setNType('bad')
         setNMessage(
           `Note '${note.content}' was already removed from the server`
@@ -70,17 +70,13 @@ const App = () => {
           setNMessage(null)
         }, 3000)
       })
-      setNotes(notes.filter(n => n.id !== id))
+    setNotes(notes.filter(n => n.id !== id))
   }
-
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important)
 
   const handleLogin = async event => {
     event.preventDefault()
     try {
-      const user = await loginService.login({username, password})
+      const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
@@ -94,7 +90,7 @@ const App = () => {
       }, 3000)
     }
   }
-  
+
   const loginForm = () => (
     <Togglable buttonLabel='login'>
       <Login
@@ -108,7 +104,7 @@ const App = () => {
   )
 
   const noteFormRef = useRef()
-  
+
   const noteForm = () => (
     <Togglable buttonLabel="new note" ref={noteFormRef}>
       <AddNote createNote={addNote} />
@@ -119,13 +115,10 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       <Notification message={nMessage} type={nType} />
-      
+
       {user === null
         ? loginForm()
-        : <div>
-            <p>{user.name} logged in</p>
-            {noteForm()}  
-          </div>
+        : <div><p>{user.name} logged in</p>{noteForm()}</div>
       }
       
       <button onClick={() => setShowAll(!showAll)}>
@@ -136,7 +129,7 @@ const App = () => {
           <Note key={note.id} note={note} toggleImportance={() => toggleImportanceOf(note.id)}/>
         )}
       </ul>
-  </div>
+    </div>
   )
 }
 
