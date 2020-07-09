@@ -22,4 +22,6 @@ const Toggle = React.forwardRef(({ label, children, }, ref) => {
   )
 })
 
+Toggle.displayName = 'Toggle'
+
 export default Toggle

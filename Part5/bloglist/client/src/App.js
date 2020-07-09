@@ -39,7 +39,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (e) {
-      setNMessage(`wrong credentials`)
+      setNMessage('wrong credentials')
       setTimeout(() => { setNMessage('') }, 3000)
     }
   }
@@ -47,7 +47,7 @@ const App = () => {
   const handleLogout = async event => {
     event.preventDefault()
     window.localStorage.removeItem('loggedUser')
-    setNMessage(`successfully logged out`)
+    setNMessage('successfully logged out')
     setTimeout(() => { setNMessage('') }, 3000)
     setUser(null)
   }
@@ -73,11 +73,11 @@ const App = () => {
   }
 
   const loginForm = () => (
-    <Login 
+    <Login
       submit={handleLogin}
       username={username} pass={password}
-      usernameChange={({target}) => setUsername(target.value)}
-      passChange={({target}) => setPassword(target.value)}
+      usernameChange={({ target }) => setUsername(target.value)}
+      passChange={({ target }) => setPassword(target.value)}
     />
   )
 
@@ -92,9 +92,7 @@ const App = () => {
     <div>
 
       {user !== null
-        ? <div>
-            {user.name} logged in <button onClick={handleLogout}>log out</button>
-          </div>
+        ? <div>{user.name} logged in <button onClick={handleLogout}>log out</button></div>
         : null
       }
 
@@ -103,13 +101,13 @@ const App = () => {
       {user === null
         ? loginForm()
         : <div>
-            {blogForm()}
-            <h2>blogs</h2>
+          {blogForm()}
+          <h2>blogs</h2>
 
-            {(blogs.sort((a, b) => b.likes - a.likes)).map(blog =>
-              <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete}/>
-            )}
-          </div>
+          {(blogs.sort((a, b) => b.likes - a.likes)).map(blog =>
+            <Blog key={blog.id} blog={blog} handleLike={handleLike} handleDelete={handleDelete}/>
+          )}
+        </div>
       }
     
     </div>
